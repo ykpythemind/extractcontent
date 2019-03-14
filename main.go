@@ -8,6 +8,7 @@ import (
 	"io"
 	"log"
 	"math"
+	"net/http"
 	"os"
 	"strings"
 
@@ -16,13 +17,27 @@ import (
 )
 
 func main() {
-	file, err := os.Open("testdata/test01.html")
-	if err != nil {
-		log.Fatalf("cant open file %s", err)
-	}
-	defer file.Close()
+	// file, err := os.Open("testdata/test01.html")
+	// if err != nil {
+	// 	log.Fatalf("cant open file %s", err)
+	// }
+	// defer file.Close()
 
-	parse(file)
+	// parse(file)
+
+	if len(os.Args) != 2 {
+		log.Fatal("args is wrong")
+	}
+
+	url := os.Args[1]
+
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Fatalf("err Get: %s", err)
+	}
+	defer resp.Body.Close()
+
+	parse(resp.Body)
 }
 
 func parse(r io.Reader) {
