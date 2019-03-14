@@ -88,13 +88,14 @@ func getChildrenNode(node *html.Node) []*html.Node {
 
 func getText(node *html.Node) string {
 	var text []string
-	if node.Type == html.TextNode {
-		if node.Data != "" {
-			text = append(text, node.Data)
-		}
+	if node.Type == html.TextNode && !isSkippableNode(node) {
+		text = append(text, node.Data)
 	}
 
 	for c := node.FirstChild; c != nil; c = c.NextSibling {
+		if isSkippableNode(c) {
+			continue
+		}
 		if t := getText(c); t != "" {
 			text = append(text, t)
 		}
