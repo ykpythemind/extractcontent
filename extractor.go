@@ -16,24 +16,24 @@ import (
 	"golang.org/x/net/html/atom"
 )
 
-// ExtractContent is xx
-type ExtractContent struct {
+// Extractor is xx
+type Extractor struct {
 	Stdin  io.Reader
 	Stdout io.Writer
 	debug  bool
 }
 
-// NewExtractContent return instance of ExtractContent
-func NewExtractContent(stdin io.Reader, stdout io.Writer, debug bool) *ExtractContent {
-	return &ExtractContent{stdin, stdout, debug}
+// NewExtractor return instance of ExtractContent
+func NewExtractor(stdin io.Reader, stdout io.Writer, debug bool) *Extractor {
+	return &Extractor{stdin, stdout, debug}
 }
 
 // Extract writes results to reader
-func (e *ExtractContent) Extract() error {
+func (e *Extractor) Extract() error {
 	return e.parse()
 }
 
-func (e *ExtractContent) parse() error {
+func (e *Extractor) parse() error {
 	nodes, err := html.Parse(e.Stdin)
 	if err != nil {
 		return err
@@ -183,7 +183,7 @@ func isSkippableNode(node *html.Node) bool {
 	return false
 }
 
-func (e *ExtractContent) debugNode(node *html.Node) {
+func (e *Extractor) debugNode(node *html.Node) {
 	if !e.debug {
 		return
 	}

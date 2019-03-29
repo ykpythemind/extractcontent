@@ -8,9 +8,9 @@ import (
 	"testing"
 )
 
-func newExtractContent(r io.Reader) (*ExtractContent, *bytes.Buffer) {
+func newExtractor(r io.Reader) (*Extractor, *bytes.Buffer) {
 	buf := &bytes.Buffer{}
-	return NewExtractContent(r, buf, true), buf
+	return NewExtractor(r, buf, testing.Verbose()), buf
 }
 
 func TestExtractFile01(t *testing.T) {
@@ -20,7 +20,7 @@ func TestExtractFile01(t *testing.T) {
 	}
 	defer file.Close()
 
-	e, buf := newExtractContent(file)
+	e, buf := newExtractor(file)
 
 	err = e.Extract()
 	if err != nil {
