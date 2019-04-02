@@ -33,7 +33,7 @@ func main() {
 func ExtractStdin(r io.Reader, w io.Writer) int {
 	extractor := ext.NewExtractor(r, w, nil, false)
 	if err := extractor.Extract(); err != nil {
-		fmt.Fprintf(os.Stderr, "extract failed: %s", err)
+		fmt.Fprintf(os.Stderr, "extract failed: %s\n", err)
 		return 1
 	}
 	return 0
@@ -41,20 +41,20 @@ func ExtractStdin(r io.Reader, w io.Writer) int {
 
 func ExtractRemote(w io.Writer, url string) int {
 	if url == "" {
-		fmt.Fprint(os.Stderr, "fail: URL is blank. ")
+		fmt.Fprint(os.Stderr, "fail: URL is blank. \n")
 		return 1
 	}
 
 	resp, err := http.Get(url)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "err Get: %s", err)
+		fmt.Fprintf(os.Stderr, "err Get: %s\n", err)
 		return 1
 	}
 	defer resp.Body.Close()
 
 	extractor := ext.NewExtractor(resp.Body, w, nil, false)
 	if err := extractor.Extract(); err != nil {
-		fmt.Fprintf(os.Stderr, "extract failed: %s", err)
+		fmt.Fprintf(os.Stderr, "extract failed: %s\n", err)
 		return 1
 	}
 	return 0
