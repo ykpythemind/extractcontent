@@ -8,6 +8,8 @@ import (
 )
 
 var strictPolicy = bluemonday.StrictPolicy()
+
+// NOTE: id属性などは残ってしまう
 var policy = bluemonday.UGCPolicy()
 
 // Sanitizer sanitize from reader and return results
