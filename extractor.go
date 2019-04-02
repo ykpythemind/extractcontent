@@ -46,12 +46,17 @@ func (e *Extractor) Extract() error {
 	e.debugNode(node)
 
 	buf := &bytes.Buffer{}
-	if err := e.Sanitizer.Sanitize(node, buf); err != nil {
-		return err
+	if e.Sanitizer != nil {
+		if err := e.Sanitizer.Sanitize(node, buf); err != nil {
+			return err
+		}
 	}
 
+	// trim white space
+	str := strings.TrimSpace(buf.String())
+
 	// write results to output
-	_, err = fmt.Fprint(e.Stdout, strings.TrimSpace(buf.String()))
+	_, err = fmt.Fprint(e.Stdout, str)
 	if err != nil {
 		return err
 	}
