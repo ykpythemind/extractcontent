@@ -10,7 +10,7 @@ import (
 
 func newExtractor(r io.Reader) (*Extractor, *bytes.Buffer) {
 	buf := &bytes.Buffer{}
-	return NewExtractor(r, buf, testing.Verbose()), buf
+	return NewExtractor(r, buf, nil, testing.Verbose()), buf
 }
 
 func TestExtractFile01(t *testing.T) {

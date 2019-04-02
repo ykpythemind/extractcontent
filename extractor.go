@@ -18,29 +18,29 @@ import (
 
 // Extractor is xx
 type Extractor struct {
-	Stdin  io.Reader
-	Stdout io.Writer
-	debug  bool
+	Stdin     io.Reader
+	Stdout    io.Writer
+	Sanitizer Sanitizer
+	debug     bool
 }
 
-// NewExtractor return instance of ExtractContent
-func NewExtractor(stdin io.Reader, stdout io.Writer, debug bool) *Extractor {
-	return &Extractor{stdin, stdout, debug}
+// NewExtractor return instance of Extractor
+func NewExtractor(stdin io.Reader, stdout io.Writer, sanitizer Sanitizer, debug bool) *Extractor {
+	if sanitizer == nil {
+		sanitizer = &NoopSanitizer{}
+	}
+	return &Extractor{stdin, stdout, sanitizer, debug}
 }
 
 // Extract writes results to reader
 func (e *Extractor) Extract() error {
-	return e.parse()
-}
-
-func (e *Extractor) parse() error {
-	nodes, err := html.Parse(e.Stdin)
+	node, err := e.parse()
 	if err != nil {
 		return err
 	}
 
 	// TODO: cleaning node
-	node := TrimNode(nodes, 0)
+	node = TrimNode(node, 0)
 
 	e.debugNode(node)
 
@@ -48,7 +48,12 @@ func (e *Extractor) parse() error {
 	if err != nil {
 		return err
 	}
+
 	return nil
+}
+
+func (e *Extractor) parse() (*html.Node, error) {
+	return html.Parse(e.Stdin)
 }
 
 // TrimNode は自分自身と子供達の中で一番強いノードを返す
