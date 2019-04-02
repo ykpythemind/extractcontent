@@ -27,6 +27,9 @@ type Extractor struct {
 
 // NewExtractor return instance of Extractor
 func NewExtractor(stdin io.Reader, stdout io.Writer, sanitizer Sanitizer, debug bool) *Extractor {
+	if sanitizer == nil {
+		sanitizer = &DefaultSanitizer{}
+	}
 	return &Extractor{stdin, stdout, sanitizer, debug}
 }
 
