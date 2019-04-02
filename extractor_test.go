@@ -12,7 +12,7 @@ import (
 
 func newExtractor(r io.Reader) (*Extractor, *bytes.Buffer) {
 	buf := &bytes.Buffer{}
-	return NewExtractor(r, buf, nil, testing.Verbose()), buf
+	return NewExtractor(r, buf, &StrictSanitizer{}, testing.Verbose()), buf
 }
 
 func prepareFile(name string) (*os.File, func()) {
@@ -38,9 +38,9 @@ func TestExtractFile01(t *testing.T) {
 	}
 
 	str := buf.String()
-	t.Logf("test01 result: %s", str)
+	t.Logf("result: %s", str)
 
-	prefix := "<section"
+	prefix := "アポ電"
 	if !strings.HasPrefix(str, prefix) {
 		t.Fatalf("results must start with: %s", prefix)
 	}
@@ -58,9 +58,9 @@ func TestExtractFile02(t *testing.T) {
 	}
 
 	str := buf.String()
-	t.Logf("test01 result: %s", str)
+	t.Logf("result: %s", str)
 
-	prefix := "<section"
+	prefix := "この記事は"
 	if !strings.HasPrefix(str, prefix) {
 		t.Fatalf("results must start with: %s", prefix)
 	}

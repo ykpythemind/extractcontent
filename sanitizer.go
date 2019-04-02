@@ -1,19 +1,33 @@
 package extractcontent
 
 import (
+	"bytes"
 	"io"
 
-	"golang.org/x/net/html"
+	"github.com/microcosm-cc/bluemonday"
 )
 
-// Sanitizer sanitize nodes and write results to io.Writer
+var policy = bluemonday.StrictPolicy()
+
+// Sanitizer sanitize from reader and return results
 type Sanitizer interface {
-	Sanitize(*html.Node, io.Writer) error
+	Sanitize(io.Reader) (*bytes.Buffer, error)
+}
+
+// StrictSanitizer remove all tags
+type StrictSanitizer struct {
 }
 
 type NoopSanitizer struct {
 }
 
-func (n *NoopSanitizer) Sanitize(node *html.Node, w io.Writer) error {
-	return html.Render(w, node)
+func (n *NoopSanitizer) Sanitize(r io.Reader) (*bytes.Buffer, error) {
+	buf := &bytes.Buffer{}
+	_, err := buf.ReadFrom(r)
+	return buf, err
+}
+
+func (s *StrictSanitizer) Sanitize(r io.Reader) (*bytes.Buffer, error) {
+	b := policy.SanitizeReader(r)
+	return b, nil
 }

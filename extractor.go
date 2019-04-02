@@ -27,9 +27,6 @@ type Extractor struct {
 
 // NewExtractor return instance of Extractor
 func NewExtractor(stdin io.Reader, stdout io.Writer, sanitizer Sanitizer, debug bool) *Extractor {
-	if sanitizer == nil {
-		sanitizer = &NoopSanitizer{}
-	}
 	return &Extractor{stdin, stdout, sanitizer, debug}
 }
 
@@ -46,8 +43,10 @@ func (e *Extractor) Extract() error {
 	e.debugNode(node)
 
 	buf := &bytes.Buffer{}
+	html.Render(buf, node) // get html string
+
 	if e.Sanitizer != nil {
-		if err := e.Sanitizer.Sanitize(node, buf); err != nil {
+		if buf, err = e.Sanitizer.Sanitize(buf); err != nil {
 			return err
 		}
 	}
