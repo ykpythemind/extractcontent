@@ -12,7 +12,7 @@ import (
 
 func newExtractor(r io.Reader) (*Extractor, *bytes.Buffer) {
 	buf := &bytes.Buffer{}
-	return NewExtractor(r, buf, &StrictSanitizer{}, testing.Verbose()), buf
+	return NewExtractor(r, buf, &strictSanitizer{}, testing.Verbose()), buf
 }
 
 func prepareFile(name string) (*os.File, func()) {

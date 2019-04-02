@@ -10,24 +10,23 @@ import (
 var strictPolicy = bluemonday.StrictPolicy()
 
 // NOTE: id属性などは残ってしまう
-var policy = bluemonday.UGCPolicy()
+var defaultPolicy = bluemonday.UGCPolicy()
 
 // Sanitizer sanitize from reader and return results
 type Sanitizer interface {
 	Sanitize(io.Reader) *bytes.Buffer
 }
 
-// StrictSanitizer remove all tags
-type StrictSanitizer struct {
+type strictSanitizer struct {
 }
 
-type DefaultSanitizer struct {
+type defaultSanitizer struct {
 }
 
-func (n *DefaultSanitizer) Sanitize(r io.Reader) *bytes.Buffer {
-	return policy.SanitizeReader(r)
+func (n *defaultSanitizer) Sanitize(r io.Reader) *bytes.Buffer {
+	return defaultPolicy.SanitizeReader(r)
 }
 
-func (s *StrictSanitizer) Sanitize(r io.Reader) *bytes.Buffer {
+func (s *strictSanitizer) Sanitize(r io.Reader) *bytes.Buffer {
 	return strictPolicy.SanitizeReader(r)
 }
