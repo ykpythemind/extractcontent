@@ -46,9 +46,7 @@ func (e *Extractor) Extract() error {
 	html.Render(buf, node) // get html string
 
 	if e.Sanitizer != nil {
-		if buf, err = e.Sanitizer.Sanitize(buf); err != nil {
-			return err
-		}
+		buf = e.Sanitizer.Sanitize(buf)
 	}
 
 	// trim white space

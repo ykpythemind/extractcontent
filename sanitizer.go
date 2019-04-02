@@ -7,27 +7,25 @@ import (
 	"github.com/microcosm-cc/bluemonday"
 )
 
-var policy = bluemonday.StrictPolicy()
+var strictPolicy = bluemonday.StrictPolicy()
+var policy = bluemonday.UGCPolicy()
 
 // Sanitizer sanitize from reader and return results
 type Sanitizer interface {
-	Sanitize(io.Reader) (*bytes.Buffer, error)
+	Sanitize(io.Reader) *bytes.Buffer
 }
 
 // StrictSanitizer remove all tags
 type StrictSanitizer struct {
 }
 
-type NoopSanitizer struct {
+type DefaultSanitizer struct {
 }
 
-func (n *NoopSanitizer) Sanitize(r io.Reader) (*bytes.Buffer, error) {
-	buf := &bytes.Buffer{}
-	_, err := buf.ReadFrom(r)
-	return buf, err
+func (n *DefaultSanitizer) Sanitize(r io.Reader) *bytes.Buffer {
+	return policy.SanitizeReader(r)
 }
 
-func (s *StrictSanitizer) Sanitize(r io.Reader) (*bytes.Buffer, error) {
-	b := policy.SanitizeReader(r)
-	return b, nil
+func (s *StrictSanitizer) Sanitize(r io.Reader) *bytes.Buffer {
+	return strictPolicy.SanitizeReader(r)
 }
