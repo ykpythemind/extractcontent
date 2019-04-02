@@ -30,7 +30,7 @@ func TestExtractFile01(t *testing.T) {
 	t.Logf("test01 result: %s", buf)
 
 	str := buf.String()
-	prefix := "アポ電"
+	prefix := "<section"
 	if !strings.HasPrefix(str, prefix) {
 		t.Fatalf("results must start with: %s", prefix)
 	}

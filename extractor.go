@@ -7,6 +7,7 @@ package extractcontent
 // https://github.com/tottokug/Trimmer/blob/master/com/tottokug/Trimmer.java
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"math"
@@ -16,7 +17,7 @@ import (
 	"golang.org/x/net/html/atom"
 )
 
-// Extractor is xx
+// Extractor is Extractor
 type Extractor struct {
 	Stdin     io.Reader
 	Stdout    io.Writer
@@ -44,7 +45,13 @@ func (e *Extractor) Extract() error {
 
 	e.debugNode(node)
 
-	_, err = fmt.Fprint(e.Stdout, strings.TrimSpace(getText(node)))
+	buf := &bytes.Buffer{}
+	if err := e.Sanitizer.Sanitize(node, buf); err != nil {
+		return err
+	}
+
+	// write results to output
+	_, err = fmt.Fprint(e.Stdout, strings.TrimSpace(buf.String()))
 	if err != nil {
 		return err
 	}

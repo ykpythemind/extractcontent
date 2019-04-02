@@ -6,6 +6,7 @@ import (
 	"golang.org/x/net/html"
 )
 
+// Sanitizer sanitize nodes and write results to io.Writer
 type Sanitizer interface {
 	Sanitize(*html.Node, io.Writer) error
 }
