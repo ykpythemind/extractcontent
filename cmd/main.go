@@ -15,14 +15,7 @@ func main() {
 	flag.StringVar(&url, "url", "", "URL to extract")
 	flag.Parse()
 
-	file := os.Stdin
-	fi, err := file.Stat()
-	if err != nil {
-		panic(fmt.Sprintf("file.Stat() %s", err))
-	}
-
-	size := fi.Size()
-	if size > 0 {
+	if url == "" {
 		// 標準入力がある
 		os.Exit(extractStdin(os.Stdin, os.Stdout))
 	} else {
