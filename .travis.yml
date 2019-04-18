@@ -8,7 +8,6 @@ env:
   - GO111MODULE=on
 
 install:
-- GO111MODULE=off go get -u golang.org/x/tools/cmd/goimports
 - GO111MODULE=off go get -u golang.org/x/lint/golint
 - go mod download
 
